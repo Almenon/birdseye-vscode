@@ -1,0 +1,121 @@
+.box {
+    position: relative;
+    display: inline-block;
+    padding: 3px 8px;
+    border: 1px solid lightgrey;
+    border-radius: 4px;
+}
+
+.box.has-inner {
+    padding-right: 12px;
+}
+
+.box.has_value {
+    border-color: grey;
+}
+
+.box.selected {
+    padding: 1px 6px;
+    border: 3px solid #ccc;
+}
+
+.box.selected.has_value {
+    border-color: #2822ab;
+}
+
+.box.has_value.value_none {
+    border-style: dashed;
+}
+
+.box.has_value.exception_node, .box.has_value.selected.exception_node {
+    padding: 1px 6px;
+    border: 3px solid red;
+}
+
+.box.hovering {
+    background-color: #c1fdff;
+}
+
+#bottom_panel {
+    position: fixed !important;
+    bottom: 0 !important;
+    margin: 0;
+    width: inherit;
+}
+
+#box_value, #inspector {
+    border: 1px solid lightgrey;
+    margin: 0;
+    padding: 10px;
+    border-radius: 0;
+    background: white;
+}
+
+#inspector {
+    height: 12em;
+    overflow: auto;
+}
+
+#resize-handle {
+    background-color: lightgrey;
+    height: 10px;
+    width: 100%;
+    cursor: ns-resize;
+    background-image: url("/static/img/handle.png");
+    background-repeat: no-repeat;
+    background-position: center;
+}
+
+#box_value {
+    height: 3em;
+    overflow: hidden;
+}
+
+#code {
+    margin-bottom: 17em;
+    position: relative;
+    overflow: visible;
+}
+
+.code-font, #inspector ul li.jstree-node {
+    font-family: Menlo, Monaco, Consolas, "Courier New", monospace;
+}
+
+.call-row a {
+    display: block;
+}
+
+.args-table tr td:first-child {
+    max-width: 20em;
+}
+
+.loop-label {
+    pointer-events: none;
+}
+
+.loop-navigator > button, .loop-navigator > .btn-group {
+    float: none !important;
+}
+
+.jstree-proton .jstree-icon.jstree-themeicon-custom {
+    margin-right: 8px;
+}
+
+#code span span.stmt_uncovered,
+#code span span.stmt_uncovered span[class^="hljs-"] {
+    color: #b3b3b3;
+    font-weight: normal;
+}
+
+.inner-call {
+    position: absolute;
+    right: 0;
+}
+
+.inner-call .glyphicon {
+    transform: rotate(45deg);
+}
+
+body > .container {
+    margin-left: 100px;
+}
