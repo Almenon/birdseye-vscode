@@ -1,0 +1,8 @@
+out
+node_modules
+.vscode/settings.json
+personal
+npm-debug.log
+*.vsix
+desktop.ini
+*.pyc

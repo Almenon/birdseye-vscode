@@ -1,0 +1,65 @@
+{
+    "name": "birdseye-vscode",
+    "displayName": "birdseye",
+    "description": "Quick, convenient, expression-centric, graphical Python debugger using the AST",
+    "version": "0.0.1",
+    "publisher": "almenon",
+    "engines": {
+        "vscode": "^1.14.0"
+    },
+    "categories": [
+        "Other",
+        "Debuggers"
+    ],
+    "keywords": [
+        "python",
+        "birdseye",
+        "debugger",
+        "graphical"
+    ],
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/almenon/vscode-birdseye"
+    },
+    "bugs": {
+        "url": "https://github.com/almenon/vscode-birdseye/issues"
+    },
+    "license": "MIT",
+    "icon": "eye.png",
+    "activationEvents": [
+        "onCommand:extension.birdseye.open"
+    ],
+    "main": "./out/src/extension",
+    "contributes": {
+        "configuration": {
+            "type": "object",
+            "title": "birdseye configuration",
+            "properties": {
+                "birdseye.port": {
+                    "type": "number",
+                    "default": 7777
+                }
+            }
+        },
+        "commands": [
+            {
+                "command": "extension.birdseye.open",
+                "title": "Show birdseye"
+            }
+        ]
+    },
+    "scripts": {
+        "vscode:prepublish": "tsc -p ./",
+        "compile": "tsc -watch -p ./",
+        "postinstall": "node ./node_modules/vscode/bin/install",
+        "test": "node ./node_modules/vscode/bin/test"
+    },
+    "devDependencies": {
+        "@types/mocha": "^2.2.32",
+        "@types/node": "^6.0.40",
+        "mocha": "^2.3.3",
+        "typescript": "^2.0.3",
+        "vscode": "^1.0.0"
+    },
+    "dependencies": {}
+}
