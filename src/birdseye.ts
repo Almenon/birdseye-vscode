@@ -11,10 +11,10 @@ export class birdseye{
   running = false;
   exitRequested = false;
 
-  start(port="7777"){
+  start(port="7777", pythonPath='python'){
 
     this.exitRequested = false
-    this.child = spawn("python", ["-m", "birdseye", port]);
+    this.child = spawn(pythonPath, ["-m", "birdseye", port]);
     this.running = true
 
     this.child.stderr.on("data", data => {

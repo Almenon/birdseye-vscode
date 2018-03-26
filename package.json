@@ -38,6 +38,10 @@
                 "birdseye.port": {
                     "type": "number",
                     "default": 7777
+                },
+                "birdseye.pythonPath": {
+                    "type": "string",
+                    "default": "python"
                 }
             }
         },
