@@ -1,12 +1,16 @@
 'use strict';
-// The module 'vscode' contains the VS Code extensibility API
-// Import the module and reference it with the alias vscode in your code below
+
 import * as vscode from 'vscode';
 import BirdseyeContentProvider from './BirdseyeContentProvider';
+import {birdseye} from './birdseye'
 
-// this method is called when your extension is activated
+let eye = new birdseye()
+let myContext: vscode.ExtensionContext
+
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
+    myContext = context
+
     vscode.workspace.registerTextDocumentContentProvider('Birdseye', new BirdseyeContentProvider());
     let disposablePreview = vscode.commands.registerTextEditorCommand('extension.birdseye.open', Birdseye);
     context.subscriptions.push(disposablePreview);
@@ -14,7 +18,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 function Birdseye(textEditor: vscode.TextEditor) {
 
-    // todo: start birdseye
+    eye.start()
 
     const previewUri = vscode.Uri.parse(`Birdseye://authority/preview`);
 
@@ -22,20 +26,14 @@ function Birdseye(textEditor: vscode.TextEditor) {
             .executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two)
             .then(s => console.log('previewHtml done'), vscode.window.showErrorMessage);
 
-    vscode.workspace.onDidCloseTextDocument((doc)=>{
-        if(doc.uri == previewUri) closeBirdseye()
+    let textDocDispose = vscode.workspace.onDidCloseTextDocument((doc)=>{
+        if(doc.uri.scheme == previewUri.scheme) eye.stop()
     })
+
+    myContext.subscriptions.push(textDocDispose)
 }
 
-function closeBirdseye(){
-    let birdseyeIsRunning = true; //todo: implement
-    if(birdseyeIsRunning){
-        // birdseye.close()
-        console.log('closed birdseye')
-    }
-}
 
-// this method is called when your extension is deactivated
 export function deactivate() {
-    closeBirdseye()
+    eye.stop()
 }
