@@ -4,6 +4,7 @@
     "description": "Quick, convenient, expression-centric, graphical Python debugger using the AST",
     "version": "0.0.1",
     "publisher": "almenon",
+    "preview": true,
     "engines": {
         "vscode": "^1.14.0"
     },
