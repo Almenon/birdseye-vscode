@@ -7,6 +7,7 @@ import {birdseye} from './birdseye'
 let eye = new birdseye()
 let myContext: vscode.ExtensionContext
 let settings: vscode.WorkspaceConfiguration
+import * as birdseyeInstaller from './birdseyeInstaller'
 
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -20,7 +21,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 function Birdseye(textEditor: vscode.TextEditor) {
 
-    eye.start(settings.get('port'), settings.get<string>("pythonPath"))
+    setupEye()
 
     const previewUri = vscode.Uri.parse(`Birdseye://authority/preview`);
 
@@ -35,6 +36,33 @@ function Birdseye(textEditor: vscode.TextEditor) {
     myContext.subscriptions.push(textDocDispose)
 }
 
+function setupEye(){
+    eye.start(settings.get('port'), settings.get<string>("pythonPath"))
+    let birdseyeInstalled = true
+
+    eye.child.stderr.on("data", data => {
+        // oddly enough birdseye seems to log everything to stderr....
+        data = data.toString()
+        console.log(data);
+        if(data.includes("No module named birdseye")){
+            birdseyeInstalled = false
+            birdseyeInstaller.installBirdseye(()=>{
+                eye.start()
+            })
+        }
+    });
+    eye.child.on('error', err => {
+        vscode.window.showErrorMessage("could not start birdseye! error: " + err.message)
+        // technically this could also happen if birdseye could not be killed
+        // or if sending a message to it failed
+        // but we are not sending messages, and we use SIGKILL, so both are unlikely
+    })
+    eye.child.on("exit", code => {
+        if(!eye.exitRequested && birdseyeInstalled){
+            vscode.window.showErrorMessage("birdseye exited abnormally! error code: " + code)
+        }
+    });
+}
 
 export function deactivate() {
     eye.stop()
