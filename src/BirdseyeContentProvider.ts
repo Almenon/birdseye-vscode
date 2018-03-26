@@ -17,7 +17,7 @@ export default class BirdseyeContentProvider implements vscode.TextDocumentConte
     }
 
     provideTextDocumentContent(uri: vscode.Uri, token: vscode.CancellationToken): vscode.ProviderResult<string> {
-        const port = this._settings.get('port');
+        const port = this._settings.get<number>('port');
         return `
             <html> <!-- iframe html thanks to https://github.com/negokaz/vscode-live-server-preview -->
                 <header>
