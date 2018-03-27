@@ -20,10 +20,10 @@
     ],
     "repository": {
         "type": "git",
-        "url": "https://github.com/almenon/vscode-birdseye"
+        "url": "https://github.com/almenon/birdseye-vscode"
     },
     "bugs": {
-        "url": "https://github.com/almenon/vscode-birdseye/issues"
+        "url": "https://github.com/almenon/birdseye-vscode/issues"
     },
     "license": "MIT",
     "icon": "eye.png",
