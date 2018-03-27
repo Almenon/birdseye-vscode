@@ -15,7 +15,7 @@ export function activate(context: vscode.ExtensionContext) {
     myContext = context
 
     vscode.workspace.registerTextDocumentContentProvider('Birdseye', new BirdseyeContentProvider());
-    let disposablePreview = vscode.commands.registerTextEditorCommand('extension.birdseye.open', Birdseye);
+    let disposablePreview = vscode.commands.registerCommand('extension.birdseye.open', Birdseye);
     context.subscriptions.push(disposablePreview);
 }
 
