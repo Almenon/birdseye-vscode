@@ -47,7 +47,7 @@ function setupEye(){
         if(data.includes("No module named birdseye")){
             birdseyeInstalled = false
             birdseyeInstaller.installBirdseye(()=>{
-                eye.start()
+                birdseyeInstalled = true
             })
         }
     });
