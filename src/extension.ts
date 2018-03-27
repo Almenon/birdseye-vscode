@@ -21,27 +21,38 @@ export function activate(context: vscode.ExtensionContext) {
 
 function Birdseye(textEditor: vscode.TextEditor) {
 
-    setupEye()
-
     const previewUri = vscode.Uri.parse(`Birdseye://authority/preview`);
-
-    vscode.commands
-            .executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two)
-            .then(s => console.log('previewHtml done'), vscode.window.showErrorMessage);
-
-    let textDocDispose = vscode.workspace.onDidCloseTextDocument((doc)=>{
-        if(doc.uri.scheme == previewUri.scheme) eye.stop()
-    })
-
-    myContext.subscriptions.push(textDocDispose)
+    
+    function onEyeRunning(){
+        vscode.commands
+                .executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two)
+                .then(s => console.log('previewHtml done'), vscode.window.showErrorMessage);
+    
+                let textDocDispose = vscode.workspace.onDidCloseTextDocument((doc)=>{
+                    if(doc.uri.scheme == previewUri.scheme) eye.stop()
+                })
+                
+                myContext.subscriptions.push(textDocDispose)
+    }
+            
+    setupEye(onEyeRunning.bind(this))
 }
 
-function setupEye(){
+function setupEye(onEyeRunning = ()=>{}){
     eye.start(settings.get('port'), settings.get<string>("pythonPath"))
     let birdseyeInstalled = true
 
     eye.child.stderr.on("data", data => {
         // oddly enough birdseye seems to log everything to stderr....
+        // birdseye will log the following upon start:
+        /* 
+            * Restarting with stat
+            * Debugger is active!
+            * Debugger PIN: XXX-XXX-XXX
+            * Running on http://127.0.0.1:XXXX/ (Press CTRL+C to quit)
+            * 
+        */
+       
         data = data.toString()
         console.log(data);
         if(data.includes("No module named birdseye")){
@@ -49,6 +60,9 @@ function setupEye(){
             birdseyeInstaller.installBirdseye(()=>{
                 birdseyeInstalled = true
             })
+        }
+        else if(data.includes("Running")){
+            onEyeRunning()
         }
     });
     eye.child.on('error', err => {
