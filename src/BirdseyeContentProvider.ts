@@ -4,8 +4,10 @@ import * as vscode from 'vscode';
 
 export default class BirdseyeContentProvider implements vscode.TextDocumentContentProvider {
    
-    private _onDidChange: vscode.EventEmitter<vscode.Uri>;
+    public static PREVIEW_URI = "Birdseye://authority/preview"
+    private _onDidChange: vscode.EventEmitter<vscode.Uri>
     private _settings: vscode.WorkspaceConfiguration
+    private _html = "Starting birdseye..."
 
     constructor() {
         this._onDidChange = new vscode.EventEmitter<vscode.Uri>();
@@ -15,13 +17,16 @@ export default class BirdseyeContentProvider implements vscode.TextDocumentConte
     get onDidChange(): vscode.Event<vscode.Uri> {
         return this._onDidChange.event;
     }
-
-    provideTextDocumentContent(uri: vscode.Uri, token: vscode.CancellationToken): vscode.ProviderResult<string> {
+    
+    /**
+     * loads birdseye website
+     */
+    public onBirdseyeRunning(){
         const port = this._settings.get<number>('port');
-        return `
-            <html> <!-- iframe html thanks to https://github.com/negokaz/vscode-live-server-preview -->
+        this._html = `
+        <html> <!-- iframe html thanks to https://github.com/negokaz/vscode-live-server-preview -->
                 <header>
-                    <style>
+                <style>
                         body, html, div {
                             margin: 0;
                             padding: 0;
@@ -31,14 +36,23 @@ export default class BirdseyeContentProvider implements vscode.TextDocumentConte
                             background-color: #fff;
                         }
                     </style>
-                </header>
+                    </header>
                 <body>
-                    <div>
-                        <iframe src="http://127.0.0.1:${port}" width="100%" height="100%" seamless frameborder=0>
-                        </iframe>
-                    </div>
-                </body>
-            </html>
+                <div>
+                    <iframe src="http://127.0.0.1:${port}" width="100%" height="100%" seamless frameborder=0>
+                    </iframe>
+                </div>
+            </body>
+        </html>
         `;
+        this.refresh()
+    }
+                    
+    private refresh() {
+        this._onDidChange.fire(vscode.Uri.parse(BirdseyeContentProvider.PREVIEW_URI));
+    }
+
+    provideTextDocumentContent(uri: vscode.Uri, token: vscode.CancellationToken): vscode.ProviderResult<string> {
+        return this._html
     }
 }

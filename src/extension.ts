@@ -3,39 +3,43 @@
 import * as vscode from 'vscode';
 import BirdseyeContentProvider from './BirdseyeContentProvider';
 import {birdseye} from './birdseye'
+import * as birdseyeInstaller from './birdseyeInstaller'
 
 let eye = new birdseye()
 let myContext: vscode.ExtensionContext
 let settings: vscode.WorkspaceConfiguration
-import * as birdseyeInstaller from './birdseyeInstaller'
+let eyeContent: BirdseyeContentProvider
 
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
     settings = vscode.workspace.getConfiguration('birdseye')
     myContext = context
+    eyeContent = new BirdseyeContentProvider()
 
-    vscode.workspace.registerTextDocumentContentProvider('Birdseye', new BirdseyeContentProvider());
+    vscode.workspace.registerTextDocumentContentProvider('Birdseye', eyeContent);
     let disposablePreview = vscode.commands.registerCommand('extension.birdseye.open', Birdseye);
     context.subscriptions.push(disposablePreview);
 }
 
-function Birdseye(textEditor: vscode.TextEditor) {
+function Birdseye() {
 
-    const previewUri = vscode.Uri.parse(`Birdseye://authority/preview`);
-    
+    setupEye(onEyeRunning.bind(this))
+
+    const previewUri = vscode.Uri.parse(BirdseyeContentProvider.PREVIEW_URI);
+    vscode.commands
+            .executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two)
+            .then(s => console.log('previewHtml done'), vscode.window.showErrorMessage);
+
     function onEyeRunning(){
-        vscode.commands
-                .executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two)
-                .then(s => console.log('previewHtml done'), vscode.window.showErrorMessage);
-    
-                let textDocDispose = vscode.workspace.onDidCloseTextDocument((doc)=>{
-                    if(doc.uri.scheme == previewUri.scheme) eye.stop()
-                })
-                
-                myContext.subscriptions.push(textDocDispose)
+        eyeContent.onBirdseyeRunning()
+
+        let textDocDispose = vscode.workspace.onDidCloseTextDocument((doc)=>{
+            if(doc.uri.scheme == previewUri.scheme) eye.stop()
+        })
+        
+        myContext.subscriptions.push(textDocDispose)
     }
             
-    setupEye(onEyeRunning.bind(this))
 }
 
 function setupEye(onEyeRunning = ()=>{}){
