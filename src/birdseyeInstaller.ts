@@ -10,6 +10,9 @@ const { spawn } = require("child_process");
  */
 export function installBirdseye(postInstallHook: () => void) {
   // function thanks to duroktar - see https://github.com/Duroktar/Wolf/blob/master/src/hunterInstaller.ts
+  
+  const settings = vscode.workspace.getConfiguration('birdseye')
+  let pythonPath = settings.get<string>('pythonPath')
 
   const installbirdseye: vscode.MessageItem = { title: "Install Package" };
   const installedManually: vscode.MessageItem = { title: "I installed manually" };
@@ -20,7 +23,7 @@ export function installBirdseye(postInstallHook: () => void) {
     )
     .then(result => {
       if (result === installbirdseye) {
-        install(postInstallHook)
+        install(pythonPath, postInstallHook)
       }
       else{
         postInstallHook()
@@ -29,10 +32,14 @@ export function installBirdseye(postInstallHook: () => void) {
 
 }
 
+/**
+ * installs birdseye, using pythonPath to decide whether to use pip or pip3
+ */
+function install(pythonPath="python", postInstallHook: () => void){
 
-function install(postInstallHook: () => void){
+  let pipPath = pythonPath == "python3" ? "pip3" : "pip"
 
-  const child = spawn("pip", ["install", "birdseye", "--user"]);
+  const child = spawn(pipPath, ["install", "birdseye", "--user"]);
 
   child.stderr.on("data", data => {
     console.error("INSTALL_ERROR:", data + "");
