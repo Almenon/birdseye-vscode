@@ -1,4 +1,4 @@
-# Birdseye
+# Birdseye  [![Downloads](https://vsmarketplacebadge.apphb.com/installs/almenon.birdseye-vscode.svg)](https://marketplace.visualstudio.com/items?itemName=almenon.birdseye-vscode)
 
 Quick, convenient, expression-centric, graphical Python debugger using the AST
 
@@ -26,7 +26,7 @@ def foo():
     * [Official Python Extension](https://marketplace.visualstudio.com/items?itemName=ms-python.python) | [Code Runner](https://marketplace.visualstudio.com/items?itemName=formulahendry.code-runner) | [AREPL](https://github.com/Almenon/AREPL-vscode) | [wolf](https://marketplace.visualstudio.com/items?itemName=traBpUkciP.wolf)
     * Or you can just use the command line... really anything works
 2. Launch birdseye
-    * (F1 -> Birdseye)
+    * (F1 -> [Birdseye](https://marketplace.visualstudio.com/items?itemName=almenon.birdseye-vscode))
 3. Click on:
     1. The name of the file containing your function
     2. The name of the function
