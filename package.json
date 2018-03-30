@@ -38,11 +38,13 @@
             "properties": {
                 "birdseye.port": {
                     "type": "number",
-                    "default": 7777
+                    "default": 7778,
+                    "description": "The extension configures birdseye to show its content on localhost:7778 by default - if this conflicts with another port you can change it"
                 },
                 "birdseye.pythonPath": {
                     "type": "string",
-                    "default": "python"
+                    "default": "python",
+                    "description": "Mac/Linux users might want to change this to python3 if they are using python 3"
                 }
             }
         },
