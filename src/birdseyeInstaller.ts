@@ -1,6 +1,6 @@
 import * as vscode from "vscode";
 
-const { spawn } = require("child_process");
+import { spawn } from "child_process";
 
 /**
  * Gives user installation prompt
@@ -44,6 +44,10 @@ function install(pythonPath="python", postInstallHook: () => void){
   child.stderr.on("data", data => {
     console.error("INSTALL_ERROR:", data + "");
   });
+
+  child.on('error', err => {
+    vscode.window.showErrorMessage("pip is not installed! error: " + err.message)
+  })
 
   child.on("close", code => {
     if (code !== 0) {
