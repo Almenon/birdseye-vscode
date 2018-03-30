@@ -17,9 +17,13 @@ export class birdseye{
     this.child = spawn(pythonPath, ["-m", "birdseye", port]);
     this.running = true
 
+    // flask logs everythihng to stderr
     this.child.stderr.on("data", data => {
-        // oddly enough birdseye seems to log everything to stderr....
         console.log(data.toString());
+        if(data.toString().includes("Traceback (most recent call last)")){
+            // we have an exception :(
+            vscode.window.showErrorMessage(data.toString())
+        }
     });
     this.child.on('error', err => {
         this.running = false
