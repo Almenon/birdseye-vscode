@@ -10,6 +10,7 @@ export class birdseye{
   child: ChildProcess;
   running = false;
   exitRequested = false;
+  exception:string;
 
   start(port="7777", pythonPath='python'){
 
@@ -22,7 +23,8 @@ export class birdseye{
         console.log(data);
 
         if(this.hasError(data)){
-            vscode.window.showErrorMessage(data + ' Please raise an issue: https://github.com/Almenon/birdseye-vscode/issues')
+            // save exception for later to show user when birdseye exits
+            this.exception = data
         }
 
     });
@@ -37,7 +39,10 @@ export class birdseye{
 
     this.child.on("exit", code => {
         if(!this.exitRequested){
-            vscode.window.showErrorMessage("birdseye exited abnormally! error code: " + code)
+            vscode.window.showErrorMessage(
+                `birdseye exited due to an error :( error code: ${code} Exception: ${this.exception}
+                 Please raise an issue: https://github.com/Almenon/birdseye-vscode/issues` 
+            )
             this.running = false
         }
     });
