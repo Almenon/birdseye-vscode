@@ -17,14 +17,15 @@ export class birdseye{
     this.child = spawn(pythonPath, ["-m", "birdseye", port]);
     this.running = true
 
-    // flask logs everythihng to stderr
     this.child.stderr.on("data", data => {
-        console.log(data.toString());
-        if(data.toString().includes("Traceback (most recent call last)")){
-            // we have an exception :(
-            vscode.window.showErrorMessage(data.toString())
+        data = data.toString().toLowerCase()
+        console.log(data);
+
+        if(data.includes("traceback (most recent call last)") || data.includes("error") || data.includes("exception")){
+            vscode.window.showErrorMessage(data + ' Please raise an issue: https://github.com/Almenon/birdseye-vscode/issues')
         }
     });
+
     this.child.on('error', err => {
         this.running = false
         vscode.window.showErrorMessage("could not start birdseye! error: " + err.message)
@@ -32,6 +33,7 @@ export class birdseye{
         // or if sending a message to it failed
         // but we are not sending messages, and we use SIGKILL, so both are unlikely
     })
+
     this.child.on("exit", code => {
         if(!this.exitRequested){
             vscode.window.showErrorMessage("birdseye exited abnormally! error code: " + code)
