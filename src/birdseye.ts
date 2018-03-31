@@ -22,7 +22,7 @@ export class birdseye{
         console.log(data);
 
         if(!data.startsWith("127.0.0.1") && // anything starting with 127.0.0.1 will just be normal web requests
-        data.includes("traceback (most recent call last)") || data.includes("error") || data.includes("exception")){
+        (data.includes("traceback (most recent call last)") || data.includes("error") || data.includes("exception"))){
             vscode.window.showErrorMessage(data + ' Please raise an issue: https://github.com/Almenon/birdseye-vscode/issues')
         }
     });
