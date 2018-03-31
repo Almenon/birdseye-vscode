@@ -18,13 +18,13 @@ export class birdseye{
     this.running = true
 
     this.child.stderr.on("data", data => {
-        data = data.toString().toLowerCase()
+        data = data.toString()
         console.log(data);
 
-        if(!data.startsWith("127.0.0.1") && // anything starting with 127.0.0.1 will just be normal web requests
-        (data.includes("traceback (most recent call last)") || data.includes("error") || data.includes("exception"))){
+        if(this.hasError(data)){
             vscode.window.showErrorMessage(data + ' Please raise an issue: https://github.com/Almenon/birdseye-vscode/issues')
         }
+
     });
 
     this.child.on('error', err => {
@@ -50,6 +50,12 @@ export class birdseye{
         this.child.kill('SIGKILL')
         this.running = false
     }
+  }
+
+  private hasError(data:string){
+    data = data.toLowerCase()
+    return !data.startsWith("127.0.0.1") && // anything starting with 127.0.0.1 will just be normal web requests
+    (data.includes("traceback (most recent call last)") || data.includes("error") || data.includes("exception"))
   }
 
 }
