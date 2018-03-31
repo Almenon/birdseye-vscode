@@ -2,7 +2,7 @@
     "name": "birdseye-vscode",
     "displayName": "birdseye",
     "description": "Quick, convenient, expression-centric, graphical Python debugger using the AST",
-    "version": "0.0.2",
+    "version": "0.0.3",
     "publisher": "almenon",
     "preview": true,
     "engines": {
