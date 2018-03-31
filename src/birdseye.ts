@@ -21,7 +21,8 @@ export class birdseye{
         data = data.toString().toLowerCase()
         console.log(data);
 
-        if(data.includes("traceback (most recent call last)") || data.includes("error") || data.includes("exception")){
+        if(!data.startsWith("127.0.0.1") && // anything starting with 127.0.0.1 will just be normal web requests
+        data.includes("traceback (most recent call last)") || data.includes("error") || data.includes("exception")){
             vscode.window.showErrorMessage(data + ' Please raise an issue: https://github.com/Almenon/birdseye-vscode/issues')
         }
     });
