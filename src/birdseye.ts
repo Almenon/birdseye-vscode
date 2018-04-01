@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { spawn, ChildProcess } from "child_process"
+import {killAll} from './utilities'
 
 /**
  * function taken from Duroktar's Wolf Ext
@@ -14,8 +15,11 @@ export class birdseye{
 
   start(port="7777", pythonPath='python'){
 
+    let isWin = process.platform == "win32"
+
     this.exitRequested = false
-    this.child = spawn(pythonPath, ["-m", "birdseye", port]);
+    // if non-windows spawn in detached state so we can easily kill children
+    this.child = spawn(pythonPath, ["-m", "birdseye", port], {'detached':!isWin});
     this.running = true
 
     this.child.stderr.on("data", data => {
@@ -52,7 +56,7 @@ export class birdseye{
   stop(){
     if(this.running){
         this.exitRequested = true
-        this.child.kill('SIGKILL')
+        killAll(this.child.pid)
         this.running = false
     }
   }
