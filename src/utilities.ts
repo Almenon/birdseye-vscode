@@ -6,7 +6,7 @@ import {exec} from 'child_process'
  * @param pid process identifier
  * @param signal kill signal
  */
-export function killAll(pid:number, signal:string|number='SIGKILL'){
+export function killAll(pid:number, signal:string|number='SIGTERM'){
     if(process.platform == "win32"){
         exec(`taskkill /PID ${pid} /T /F`, (error, stdout, stderr)=>{
             console.log("stdout: " + stdout)
