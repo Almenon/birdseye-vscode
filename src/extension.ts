@@ -47,7 +47,7 @@ function setupEye(onEyeRunning = ()=>{}){
     let birdseyeInstalled = true
 
     eye.child.stderr.on("data", data => {
-        // oddly enough birdseye seems to log everything to stderr....
+        // we also recieve logs on stderr
         // birdseye will log the following upon start:
         /* 
             * Restarting with stat
@@ -73,7 +73,6 @@ function setupEye(onEyeRunning = ()=>{}){
         vscode.window.showErrorMessage("could not start birdseye! error: " + err.message)
         // technically this could also happen if birdseye could not be killed
         // or if sending a message to it failed
-        // but we are not sending messages, and we use SIGKILL, so both are unlikely
     })
     eye.child.on("exit", code => {
         if(!eye.exitRequested && birdseyeInstalled){
