@@ -45,6 +45,11 @@
                     "type": "string",
                     "default": "python",
                     "description": "Mac/Linux users might want to change this to python3 if they are using python 3"
+                },
+                "birdseye.telemetry": {
+                    "type":"boolean",
+                    "default":true,
+                    "description": "Whether to report useful anonymous data back to developer."
                 }
             }
         },
@@ -68,5 +73,7 @@
         "typescript": "^2.0.3",
         "vscode": "^1.0.0"
     },
-    "dependencies": {}
+    "dependencies": {
+        "vscode-extension-telemetry": "0.0.15"
+    }
 }

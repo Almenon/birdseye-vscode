@@ -35,18 +35,11 @@ export class birdseye{
 
     this.child.on('error', err => {
         this.running = false
-        vscode.window.showErrorMessage("could not start birdseye! error: " + err.message)
-        // technically this could also happen if birdseye could not be killed
-        // or if sending a message to it failed
-        // but we are not sending messages, and we use SIGKILL, so both are unlikely
+        console.error(err.message)
     })
 
     this.child.on("exit", code => {
         if(!this.exitRequested){
-            vscode.window.showErrorMessage(
-                `birdseye exited due to an error :( error code: ${code} Exception: ${this.exception}
-                 Please raise an issue: https://github.com/Almenon/birdseye-vscode/issues` 
-            )
             this.running = false
         }
     });

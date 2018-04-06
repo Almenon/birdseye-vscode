@@ -4,11 +4,14 @@ import * as vscode from 'vscode';
 import BirdseyeContentProvider from './BirdseyeContentProvider';
 import {birdseye} from './birdseye'
 import * as birdseyeInstaller from './birdseyeInstaller'
+import Reporter from './telemetry'
 
 let eye = new birdseye()
 let myContext: vscode.ExtensionContext
 let settings: vscode.WorkspaceConfiguration
 let eyeContent: BirdseyeContentProvider
+let reporter: Reporter
+let timeStarted:number
 
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
@@ -21,8 +24,10 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(disposablePreview);
 }
 
-function Birdseye() {
-
+    function Birdseye() {
+    reporter = new Reporter(settings.get<boolean>('telemetry'))
+    
+    timeStarted = Date.now()
     setupEye(onEyeRunning.bind(this))
 
     const previewUri = vscode.Uri.parse(BirdseyeContentProvider.PREVIEW_URI);
@@ -34,10 +39,8 @@ function Birdseye() {
         eyeContent.onBirdseyeRunning()
 
         let textDocDispose = vscode.workspace.onDidCloseTextDocument((doc)=>{
-            if(doc.uri.scheme == previewUri.scheme) eye.stop()
+            if(doc.uri.scheme == previewUri.scheme) dispose()
         })
-        
-        myContext.subscriptions.push(textDocDispose)
     }
             
 }
@@ -70,17 +73,30 @@ function setupEye(onEyeRunning = ()=>{}){
         }
     });
     eye.child.on('error', err => {
-        vscode.window.showErrorMessage("could not start birdseye! error: " + err.message)
         // technically this could also happen if birdseye could not be killed
         // or if sending a message to it failed
+        vscode.window.showErrorMessage("could not start birdseye! error: " + err.message)
+        reporter.sendError(err.message)
     })
     eye.child.on("exit", code => {
         if(!eye.exitRequested && birdseyeInstalled){
-            vscode.window.showErrorMessage("birdseye exited abnormally! error code: " + code)
+            `birdseye exited due to an error :( error code: ${code} Exception: ${eye.exception}
+                Please raise an issue: https://github.com/Almenon/birdseye-vscode/issues` 
         }
+        reporter.sendError(eye.exception, code)
     });
 }
 
-export function deactivate() {
+function dispose(){
+    
+    let timeSpentSeconds = (Date.now()-timeStarted)/1000
+    reporter.sendFinishedEvent(settings.get<string>("pythonPath"), timeSpentSeconds)
+    reporter.dispose()
+    
     eye.stop()
+}
+
+export function deactivate() {
+    reporter.sendDeactivatedEvent()
+    dispose()
 }
