@@ -37,9 +37,7 @@ export function installBirdseye(postInstallHook: () => void) {
  */
 function install(pythonPath="python", postInstallHook: () => void){
 
-  let pipPath = pythonPath == "python3" ? "pip3" : "pip"
-
-  const child = spawn(pipPath, ["install", "birdseye", "--user"]);
+  const child = spawn(pythonPath, ["-m","pip","install", "birdseye", "--user"]);
 
   child.stderr.on("data", data => {
     console.error("INSTALL_ERROR:", data + "");
