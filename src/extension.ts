@@ -16,18 +16,19 @@ let timeStarted:number
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
     myContext = context
-    eyeContent = new BirdseyeContentProvider()
 
-    vscode.workspace.registerTextDocumentContentProvider('Birdseye', eyeContent);
     let disposablePreview = vscode.commands.registerCommand('extension.birdseye.open', Birdseye);
     context.subscriptions.push(disposablePreview);
 }
 
 function Birdseye() {
+    timeStarted = Date.now()
     settings = vscode.workspace.getConfiguration('birdseye')
     reporter = new Reporter(settings.get<boolean>('telemetry'))
+    eyeContent = new BirdseyeContentProvider()
+
+    let docSubscription = vscode.workspace.registerTextDocumentContentProvider('Birdseye', eyeContent);
     
-    timeStarted = Date.now()
     setupEye(onEyeRunning.bind(this))
 
     const previewUri = vscode.Uri.parse(BirdseyeContentProvider.PREVIEW_URI);
@@ -42,6 +43,8 @@ function Birdseye() {
             if(doc.uri.scheme == previewUri.scheme) dispose()
         })
     }
+
+    myContext.subscriptions.push(docSubscription)
             
 }
 
