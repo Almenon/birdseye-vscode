@@ -15,7 +15,6 @@ let timeStarted:number
 
 // your extension is activated the very first time the command is executed
 export function activate(context: vscode.ExtensionContext) {
-    settings = vscode.workspace.getConfiguration('birdseye')
     myContext = context
     eyeContent = new BirdseyeContentProvider()
 
@@ -24,7 +23,8 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(disposablePreview);
 }
 
-    function Birdseye() {
+function Birdseye() {
+    settings = vscode.workspace.getConfiguration('birdseye')
     reporter = new Reporter(settings.get<boolean>('telemetry'))
     
     timeStarted = Date.now()
