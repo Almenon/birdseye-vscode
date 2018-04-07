@@ -47,8 +47,8 @@
                     "description": "Mac/Linux users might want to change this to python3 if they are using python 3"
                 },
                 "birdseye.telemetry": {
-                    "type":"boolean",
-                    "default":true,
+                    "type": "boolean",
+                    "default": true,
                     "description": "Whether to report useful anonymous data back to developer."
                 }
             }
