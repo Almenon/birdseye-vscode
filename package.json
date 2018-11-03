@@ -49,6 +49,10 @@
                     "type": "boolean",
                     "default": true,
                     "description": "Whether to report useful anonymous data back to developer."
+                },
+                "birdseye.warnIfOutdated": {
+                    "type": "boolean",
+                    "default": true
                 }
             }
         },

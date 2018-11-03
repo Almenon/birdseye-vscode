@@ -8,7 +8,7 @@ import { spawn } from "child_process";
  * Or if user says they have installed birdseye manually
  * @param postInstallHook 
  */
-export function installBirdseye(postInstallHook: () => void) {
+export function installBirdseye(postInstallHook: () => any) {
   // function thanks to duroktar - see https://github.com/Duroktar/Wolf/blob/master/src/hunterInstaller.ts
   
   const settings = vscode.workspace.getConfiguration('birdseye')
@@ -33,11 +33,29 @@ export function installBirdseye(postInstallHook: () => void) {
 }
 
 /**
+ * Gives user upgrade prompt
+ * Calls postinstallhook if user clicks on upgrade and installation is successful
+ * @param updateMsg
+ * @param postInstallHook 
+ */
+export function upgradeBirdseye(updateMsg:string, postUpgradeHook: () => any){  
+  const settings = vscode.workspace.getConfiguration('birdseye')
+  let pythonPath = settings.get<string>('pythonPath')
+
+  if(settings.get<boolean>('warnIfOutdated')){
+    vscode.window.showInformationMessage(updateMsg, 'upgrade').then(() => {
+          install(pythonPath, postUpgradeHook, true)
+      });
+  }
+
+}
+
+/**
  * installs birdseye, using pythonPath to decide whether to use pip or pip3
  */
-function install(pythonPath="python", postInstallHook: () => void){
+function install(pythonPath="python", postInstallHook: () => void, upgrade=false){
 
-  const child = spawn(pythonPath, ["-m","pip","install", "birdseye", "--user"]);
+  const child = spawn(pythonPath, ["-m","pip","install", "birdseye", "--user", upgrade ? "--upgrade":""]);
 
   child.stderr.on("data", data => {
     console.error("INSTALL_ERROR:", data + "");
@@ -50,10 +68,7 @@ function install(pythonPath="python", postInstallHook: () => void){
   child.on("close", code => {
     if (code !== 0) {
       vscode.window.showWarningMessage(
-        [
-          "There was an error attempting to install birdseye. Please try running",
-          "'pip install birdseye --user' manually."
-        ].join(" ")
+          `There was an error attempting to install birdseye. Please try running 'pip install birdseye --user ${upgrade?'--upgrade':''}' manually.`
       );
     } else {
       vscode.window.showInformationMessage(
