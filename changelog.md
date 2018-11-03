@@ -1,3 +1,10 @@
+## V5:
+
+see https://github.com/Almenon/birdseye-vscode/milestone/3?closed=1
+
+**Enhancements**:
+birdseye now tells you if the package is out of date
+
 ## V4:
 
 see https://github.com/Almenon/birdseye-vscode/milestone/2?closed=1
