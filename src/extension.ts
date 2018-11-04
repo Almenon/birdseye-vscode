@@ -74,7 +74,7 @@ function setupEye(onEyeRunning = ()=>{}){
                 birdseyeInstalled = true
             })
         }
-        else if(data.includes("Running")){
+        else if(data.includes("Running") || data.includes("Debugger is active")){
             onEyeRunning()
         }
 
