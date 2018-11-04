@@ -29,27 +29,15 @@ function Birdseye() {
     settings = vscode.workspace.getConfiguration('birdseye')
     reporter = new Reporter(settings.get<boolean>('telemetry'))
     eyeContent = new BirdseyeContentProvider()
-
-    let docSubscription = vscode.workspace.registerTextDocumentContentProvider('Birdseye', eyeContent);
     
     setupEye(onEyeRunning.bind(this))
 
-    const previewUri = vscode.Uri.parse(BirdseyeContentProvider.PREVIEW_URI);
-    vscode.commands
-            .executeCommand('vscode.previewHtml', previewUri, vscode.ViewColumn.Two)
-            .then(s => console.log('previewHtml done'), vscode.window.showErrorMessage);
+    eyeContent.start()
 
     function onEyeRunning(){
         eyeContent.onBirdseyeRunning()
-
-        let textDocDispose = vscode.workspace.onDidCloseTextDocument((doc)=>{
-            if(doc.uri.scheme == previewUri.scheme) dispose()
-        })
-
-        myContext.subscriptions.push(textDocDispose)
+        eyeContent.panel.onDidDispose(dispose)
     }
-
-    myContext.subscriptions.push(docSubscription)
             
 }
 

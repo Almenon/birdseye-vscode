@@ -2,28 +2,30 @@
 
 import * as vscode from 'vscode';
 
-export default class BirdseyeContentProvider implements vscode.TextDocumentContentProvider {
+export default class BirdseyeContentProvider {
    
-    public static PREVIEW_URI = "Birdseye://authority/preview"
     private _onDidChange: vscode.EventEmitter<vscode.Uri>
     private _settings: vscode.WorkspaceConfiguration
-    private _html = "Starting birdseye..."
+    panel: vscode.WebviewPanel
 
     constructor() {
         this._onDidChange = new vscode.EventEmitter<vscode.Uri>();
         this._settings = vscode.workspace.getConfiguration('birdseye')
     }
 
-    get onDidChange(): vscode.Event<vscode.Uri> {
-        return this._onDidChange.event;
+    start(){
+        this.panel = vscode.window.createWebviewPanel("birdseye","birdseye", vscode.ViewColumn.Two);
+        this.panel.webview.html = "Starting birdseye..."
+        return this.panel;
     }
+
     
     /**
      * loads birdseye website
      */
     public onBirdseyeRunning(){
         const port = this._settings.get<number>('port');
-        this._html = `
+        this.panel.webview.html = `
         <html> <!-- iframe html thanks to https://github.com/negokaz/vscode-live-server-preview -->
                 <header>
                 <style>
@@ -45,14 +47,5 @@ export default class BirdseyeContentProvider implements vscode.TextDocumentConte
             </body>
         </html>
         `;
-        this.refresh()
-    }
-                    
-    private refresh() {
-        this._onDidChange.fire(vscode.Uri.parse(BirdseyeContentProvider.PREVIEW_URI));
-    }
-
-    provideTextDocumentContent(uri: vscode.Uri, token: vscode.CancellationToken): vscode.ProviderResult<string> {
-        return this._html
     }
 }

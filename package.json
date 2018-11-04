@@ -5,7 +5,7 @@
     "version": "0.0.5",
     "publisher": "almenon",
     "engines": {
-        "vscode": "^1.14.0"
+        "vscode": "^1.23.0"
     },
     "categories": [
         "Other",
