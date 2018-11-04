@@ -3,7 +3,13 @@
 see https://github.com/Almenon/birdseye-vscode/milestone/3?closed=1
 
 **Enhancements**:
-birdseye now tells you if the package is out of date
+Birdseye now tells you if the package is out of date.
+Preview now launches faster
+
+**Fixed**
+
+Extension was incompatible with newer versions of birdseye
+Error reporting was not working correctly
 
 ## V4:
 
