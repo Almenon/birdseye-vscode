@@ -57,7 +57,7 @@ export class birdseye{
   private hasError(data:string){
     data = data.toLowerCase()
     return !data.startsWith("127.0.0.1") && // anything starting with 127.0.0.1 will just be normal web requests
-    (data.includes("traceback (most recent call last)") || data.includes("error") || data.includes("exception"))
+    (data.includes("Traceback (most recent call last)") || data.includes("Error") || data.includes("Exception"))
   }
 
 }
