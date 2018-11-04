@@ -45,6 +45,8 @@ function Birdseye() {
         let textDocDispose = vscode.workspace.onDidCloseTextDocument((doc)=>{
             if(doc.uri.scheme == previewUri.scheme) dispose()
         })
+
+        myContext.subscriptions.push(textDocDispose)
     }
 
     myContext.subscriptions.push(docSubscription)
@@ -99,8 +101,8 @@ function setupEye(onEyeRunning = ()=>{}){
     })
     eye.child.on("exit", code => {
         if(!eye.exitRequested && birdseyeInstalled){
-            `birdseye exited due to an error :( error code: ${code} Exception: ${eye.exception}
-                Please raise an issue: https://github.com/Almenon/birdseye-vscode/issues` 
+            vscode.window.showErrorMessage(`birdseye exited due to an error :( error code: ${code} Exception: ${eye.exception}
+                Please raise an issue: https://github.com/Almenon/birdseye-vscode/issues`)
         }
         reporter.sendError(eye.exception, code)
     });
