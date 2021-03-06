@@ -14,7 +14,9 @@ export default class BirdseyeContentProvider {
     }
 
     start(){
-        this.panel = vscode.window.createWebviewPanel("birdseye","birdseye", vscode.ViewColumn.Two);
+        this.panel = vscode.window.createWebviewPanel("birdseye", "birdseye", vscode.ViewColumn.Two, {
+            enableScripts: true,
+        });
         this.panel.webview.html = "Starting birdseye..."
         return this.panel;
     }
